@@ -1228,7 +1228,17 @@ switches focus to Python shell buffer."
     "Start pdb on the current script.
 
 if OUTPUT is non-nil, display the prompt after execution."
-    (let ((string (format "__pdbi._runscript('''%s''')" (buffer-file-name))))
+    (let ((string
+           (if (version<=
+                (string-trim
+                 (nth 1 (split-string
+                         (shell-command-to-string (concat
+                                                   python-shell-interpreter
+                                                   " --version"))
+                         " "))) "3.5")
+               (format "__pdbi._runscript('''%s''')" (buffer-file-name))
+             (format "target=pdb._ScriptTarget('''%s''');target.check();__pdbi._run(target)"
+                     (buffer-file-name)))))
       (if output
           (python-shell-send-string string)
         (python-shell-send-string-no-output string))))
