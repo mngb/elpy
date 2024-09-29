@@ -1232,9 +1232,10 @@ if OUTPUT is non-nil, display the prompt after execution."
            (if (version<=
                 (string-trim
                  (nth 1 (split-string
-                         (shell-command-to-string (concat
-                                                   python-shell-interpreter
-                                                   " --version"))
+                         (shell-command-to-string
+                          (concat
+                           (file-name-directory python-shell-interpreter)
+                           "python --version"))
                          " "))) "3.5")
                (format "__pdbi._runscript('''%s''')" (buffer-file-name))
              (format "target=pdb._ScriptTarget('''%s''');target.check();__pdbi._run(target)"
